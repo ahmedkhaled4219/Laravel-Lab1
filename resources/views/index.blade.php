@@ -14,6 +14,8 @@
                         <th>ID</th>
                         <th>Title</th>
                         <th>Body</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -23,6 +25,9 @@
                         <td>{{ $post['id'] }}</td>
                         <td>{{ $post['title'] }}</td>
                         <td>{{ $post['body'] }}</td>
+                        <td>{{ $post['created_at'] }}</td>
+                        <td>{{ $post['updated_at'] }}</td>
+
                         <td>
                             <a href="{{route('posts.show',$post['id'] )}}"> <i class="fas fa-eye"></i></a>
                             <a href="{{route('posts.edit',$post['id'] )}}"> <i class="fas fa-edit m-2"></i></a>
@@ -36,6 +41,8 @@
                     @endforeach
                 </tbody>
             </table>
+            {{ $posts->links() }}
+
         </div>
     </div>
 </div>

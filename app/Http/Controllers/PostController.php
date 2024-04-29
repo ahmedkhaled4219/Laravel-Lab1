@@ -3,28 +3,46 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
-    private $posts = [
-        ['id' => 1, 'title' => 'graduation', 'body' => 'congrats', 'image' => 'pic1.png'],
-        ['id' => 2, 'title' => 'php', 'body' => 'my fav programming lang', 'image' => 'pic2.png'],
-        ['id' => 3, 'title' => 'graduation', 'body' => 'nas2al allah el khalas', 'image' => 'pic3.png'],
-        ['id' => 4, 'title' => 'job fair', 'body' => 'ekrmna ya rab', 'image' => 'pic4.png'],
-
-    ];
+    public function createUsers()
+    {
+        User::factory()->count(10)->create();
+    }
 
     function create()
     {
-        return view("create");
+        $users = User::all();
+        return view("create", ["users" => $users]);
     }
+    public function store(Request $request)
+    {
+
+        $post = new Post();
+        $post->title = $request->title;
+        $post->body = $request->body;
+
+
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->getClientOriginalExtension();
+            $request->image->move(public_path('images/iti'), $imageName);
+            $post->image = $imageName;
+        }
+
+        $post->save();
+
+        return redirect()->route('posts.index');
+    }
+
     function index()
     {
         // $posts = DB::table('posts')->get();
         // return $posts;
-        $posts = Post::all();
+        $posts = Post::paginate(3);
         return view("index", ["posts" => $posts]);
     }
     function show($id)
@@ -37,6 +55,22 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
         return view("edit", ["post" => $post]);
     }
+    public function update(Request $request, $id)
+    {
+
+        $post = Post::findOrFail($id);
+        $post->title = $request->title;
+        $post->body = $request->body;
+
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->getClientOriginalExtension();
+            $request->image->move(public_path('images/iti'), $imageName);
+            $post->image = $imageName;
+        }
+        $post->save();
+        return redirect()->route('posts.index');
+    }
+
     public function destroy($id)
     {
         $post = Post::findOrFail($id);
