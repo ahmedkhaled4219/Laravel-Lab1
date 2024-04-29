@@ -24,12 +24,12 @@
                         <td>{{ $post['title'] }}</td>
                         <td>{{ $post['body'] }}</td>
                         <td>
-                            <a href="{{route('posts.show',$post['id'] )}}" class="btn btn-sm btn-primary">View</a>
-                            <a href="{{route('posts.edit',$post['id'] )}}" class="btn btn-sm btn-primary">Edit</a>
+                            <a href="{{route('posts.show',$post['id'] )}}"> <i class="fas fa-eye"></i></a>
+                            <a href="{{route('posts.edit',$post['id'] )}}"> <i class="fas fa-edit m-2"></i></a>
                             <form action="{{ route('posts.destroy', $post['id']) }}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this post?')">Delete</button>
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this post?')" style="border: none; background: none;color:red; padding: 0; cursor: pointer;"> <i class="fas fa-trash"></i></button>
                             </form>
                         </td>
                     </tr>

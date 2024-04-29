@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -20,35 +22,25 @@ class PostController extends Controller
     }
     function index()
     {
-        return view("index", ["posts" => $this->posts]);
+        // $posts = DB::table('posts')->get();
+        // return $posts;
+        $posts = Post::all();
+        return view("index", ["posts" => $posts]);
     }
     function show($id)
     {
-        if ($id <= count($this->posts)) {
-            $post = $this->posts[$id - 1];
-            return view('show', ["post" => $post]);
-        }
-        return abort(404);
+        $post = Post::findOrFail($id);
+        return view("show", ["post" => $post]);
     }
     function edit($id)
     {
-        if ($id <= count($this->posts)) {
-            $post = $this->posts[$id - 1];
-            return view('edit', ["post" => $post]);
-        }
-        return abort(404);
+        $post = Post::findOrFail($id);
+        return view("edit", ["post" => $post]);
     }
     public function destroy($id)
     {
-        $postIndex = $id - 1;
-
-        if ($postIndex < count($this->posts)) {
-            unset($this->posts[$postIndex]);
-
-            $this->posts = array_values($this->posts);
-            return view('index', ["posts" => $this->posts]);
-        }
-
-        return abort(404);
+        $post = Post::findOrFail($id);
+        $post->delete();
+        return redirect()->route('posts.index');
     }
 }
